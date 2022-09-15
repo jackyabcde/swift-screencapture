@@ -54,11 +54,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
+    @IBAction func captureWindows(_ sender: NSButton) {
+        let imgPath: String = ScreenCapture.captureWindows("\(self.tmpDir)captureWindows.png").path
+        
+        if (FileManager.default.fileExists(atPath: imgPath)) {
+            let img: NSImage = NSImage(contentsOfFile: imgPath)!
+            imgView.image = img
+        }
+        
+    }
+    
     @IBAction func captureScreen(sender: NSButton) {
         window.performMiniaturize(sender)
         let imgPath: String = ScreenCapture.captureScreen("\(self.tmpDir)captureScreen.png").path
         let img: NSImage = NSImage(contentsOfFile: imgPath)!
         imgView.image = img
+        window.deminiaturize(send)
     }
     
     @IBAction func startRecording(sender: NSButton) {

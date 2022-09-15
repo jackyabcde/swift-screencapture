@@ -10,6 +10,10 @@ import Foundation
 import AVFoundation
 
 open class ScreenRecorder: NSObject, AVCaptureFileOutputRecordingDelegate {
+    public func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        session.stopRunning()
+    }
+    
     let destinationUrl: URL
     let session: AVCaptureSession
     let movieFileOutput: AVCaptureMovieFileOutput
@@ -24,11 +28,11 @@ open class ScreenRecorder: NSObject, AVCaptureFileOutputRecordingDelegate {
         destinationUrl = destination
         
         session = AVCaptureSession()
-        session.sessionPreset = AVCaptureSessionPresetHigh
+        session.sessionPreset = AVCaptureSession.Preset.high
         
         let displayId: CGDirectDisplayID = CGDirectDisplayID(CGMainDisplayID())
 
-        let input: AVCaptureScreenInput = AVCaptureScreenInput(displayID: displayId)
+        let input: AVCaptureScreenInput = AVCaptureScreenInput(displayID: displayId)!
 
         
         if session.canAddInput(input) {
@@ -45,7 +49,7 @@ open class ScreenRecorder: NSObject, AVCaptureFileOutputRecordingDelegate {
  
     open func start() {
         session.startRunning()
-        movieFileOutput.startRecording(toOutputFileURL: self.destinationUrl, recordingDelegate: self)
+        movieFileOutput.startRecording(to: self.destinationUrl, recordingDelegate: self)
     }
     
     open func stop() {

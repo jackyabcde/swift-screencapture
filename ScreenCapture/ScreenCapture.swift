@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ImageIO
 
 // -------------------------------------------------------------------
 // Allow passing of strings, just convert them to an NSURL.
@@ -14,7 +15,9 @@ import Foundation
 public func captureRegion(_ destination: String) -> URL {
     return captureRegion(URL(fileURLWithPath: destination))
 }
-
+public func captureWindows(_ destination: String) -> URL {
+    return captureWindows(URL(fileURLWithPath: destination))
+}
 public func captureScreen(_ destination: String) -> URL {
     return captureScreen(URL(fileURLWithPath: destination))
 }
@@ -24,13 +27,28 @@ public func recordScreen(_ destination: String) -> ScreenRecorder {
 }
 
 // -------------------------------------------------------------------
+public func captureWindows(_ destination: URL) -> URL {
+    let destinationPath = destination.path as String
+    
+    let task = Process()
+    task.launchPath = "/usr/sbin/screencapture"
 
+    task.arguments = ["-i", "-rwo", destinationPath]
+    
+    task.launch()
+    task.waitUntilExit()
+    
+    return destination
+}
 public func captureRegion(_ destination: URL) -> URL {
     let destinationPath = destination.path as String
     
     let task = Process()
     task.launchPath = "/usr/sbin/screencapture"
-    task.arguments = ["-i", "-r", destinationPath]
+
+        
+    task.arguments = ["-i", "-rs", destinationPath]
+    
     task.launch()
     task.waitUntilExit()
     
